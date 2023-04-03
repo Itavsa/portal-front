@@ -1,17 +1,17 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { Article } from '../../models/article';
+import { Product } from '../../models/product';
 import { environment } from '../../environments/environment.development';
 
 @Injectable()
-export class ArticlesService {
-  url = environment.apiUrl + "/articles"
+export class ProductsService {
+  url = environment.apiUrl + "/products"
   
   constructor(private http: HttpClient) {}
   
-  getArticles(page: number): Observable<Article> {
-    return this.http.get<Article>(this.url, {params: {page, size: environment.defaultPageSize}});
+  getProducts(page: number): Observable<Product[]> {
+    return this.http.get<Product[]>(this.url, {params: {page, size: environment.defaultPageSize}});
   }
   
 }
