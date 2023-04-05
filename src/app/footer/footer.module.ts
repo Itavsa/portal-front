@@ -6,6 +6,9 @@ import { FooterComponent } from './footer.component';
   ],
   imports: [],
   providers: [],
-  bootstrap: []
+  bootstrap: [],
+  exports: [
+    FooterComponent
+  ]
 })
 export class FooterModule { }

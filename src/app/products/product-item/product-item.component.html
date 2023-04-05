@@ -1,0 +1,9 @@
+<div class="row mh-100">
+  <div class="col-md-8 h-100" [ngClass]="{'order-md-2': isRtl}">
+    <h2 class="h-25">{{ product.title }}</h2>
+    <p class="lead h-50">{{ product.description }}</p>
+  </div>
+  <div class="col-md-4 h-100 text-center" [ngClass]="{'order-md-1': isRtl}">
+    <img [src]="getPreviewPicture()" [alt]="getPreviewPicturePlaceholder()" class="img-thumbnail rounded h-100">
+  </div>
+</div>

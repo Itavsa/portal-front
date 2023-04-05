@@ -1,0 +1,24 @@
+p.lead {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+p.lead:hover {
+  overflow: scroll;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 5px #2FA4E74d; 
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  -webkit-box-shadow: inset 0 0 5px #2FA4E74d; 
+}

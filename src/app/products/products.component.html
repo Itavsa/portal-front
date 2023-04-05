@@ -1,3 +1,4 @@
-qzdqzd
-<p>{{ products }}</p>
-<product-item></product-item>
+<ng-container *ngFor="let product of products$ | async; let index = index">
+  <product-item [product]="product" [isRtl]="isEven(index)"></product-item>
+</ng-container>
+<ngb-pagination *ngIf="totalElements" [collectionSize]="totalElements" [(page)]="currentPage" [pageSize]="itemsPerPage" (pageChange)="loadPage($event)"></ngb-pagination>
