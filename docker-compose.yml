@@ -1,0 +1,7 @@
+version: '2.4'
+services:
+  portal-front:
+    container_name: portal-front
+    image: portal-front:0.0.1-SNAPSHOT
+    ports:
+      - "80:80"
