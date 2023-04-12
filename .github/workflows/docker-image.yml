@@ -1,0 +1,35 @@
+name: Build & push latest Docker image
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  getProjectVersion:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Get project version from package.json
+      id: getVersion
+      run: echo version=$(grep "version" package.json | cut -d '"' -f4 | tr -d '[[:space:]]') >> $GITHUB_OUTPUT
+    outputs:
+      version: ${{ steps.getVersion.outputs.version }}
+  buildPush:
+    needs: getProjectVersion
+    runs-on: ubuntu-latest
+    env:
+        VERSION: ${{ needs.getProjectVersion.outputs.version }}
+    permissions:
+      packages: write
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag ghcr.io/itavsa/portal-front:$VERSION
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+    - name: Push the Docker image
+      run: docker push ghcr.io/itavsa/portal-front:$VERSION
