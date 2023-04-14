@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ProductsService } from './products.service';
 import { Product } from "src/models/product";
-import { environment } from "src/environments/environment.development";
+import { environment } from "src/environments/environment";
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, filter, map, mergeMap } from "rxjs";
 import { PageApiResponse } from "src/models/pageApiResponse";

@@ -5,3 +5,5 @@ services:
     image: ghcr.io/itavsa/portal-front:0.0.1-SNAPSHOT
     ports:
       - "80:80"
+    environment:
+      - API_URL=http://portal-back:8080
