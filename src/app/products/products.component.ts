@@ -5,6 +5,7 @@ import { environment } from "src/environments/environment";
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, filter, map, mergeMap } from "rxjs";
 import { PageApiResponse } from "src/models/pageApiResponse";
+import { KeycloakService } from "keycloak-angular";
 
 @Component({
   selector: 'products',
@@ -13,32 +14,35 @@ import { PageApiResponse } from "src/models/pageApiResponse";
   styleUrls: ['./products.component.scss']
 })
 export class ProductsComponent implements OnInit {
-  readonly itemsPerPage = environment.defaultPageSize;
+  readonly itemsPerPage = environment.defaultProductsPageSize;
   products$?: Observable<Product[]>;
   currentPage!: number;
   totalElements!: number;
 
   constructor(private productsService: ProductsService,
     private router: Router,
-    private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute,
+    private readonly keycloak: KeycloakService) { }
 
-  ngOnInit(): void {
-    if (isNaN(+this.activatedRoute?.snapshot?.queryParams["currentPage"])) {
-      this.loadPage(1);
+    async ngOnInit(): Promise<void> {
+    if(await this.keycloak.isLoggedIn()) {
+      if (isNaN(+this.activatedRoute?.snapshot?.queryParams["currentPage"])) {
+        this.loadPage(1);
+      }
+      this.products$ = this.activatedRoute.queryParams
+        .pipe(
+          map(params => params["currentPage"]),
+          filter((possibleCurrentPage: any) => !isNaN(possibleCurrentPage)),
+          mergeMap((currentPage: number | string) => {
+            this.currentPage = +currentPage;
+            return this.productsService.getProducts(this.currentPage, this.itemsPerPage);
+          }),
+          map((result: PageApiResponse<Product>) => {
+            this.totalElements = result.totalElements;
+            return result.content;
+          })
+        )
     }
-    this.products$ = this.activatedRoute.queryParams
-      .pipe(
-        map(params => params["currentPage"]),
-        filter((possibleCurrentPage: any) => !isNaN(possibleCurrentPage)),
-        mergeMap((currentPage: number | string) => {
-          this.currentPage = +currentPage;
-          return this.productsService.getProducts(this.currentPage, this.itemsPerPage);
-        }),
-        map((result: PageApiResponse<Product>) => {
-          this.totalElements = result.totalElements;
-          return result.content;
-        })
-      )
   }
 
   isEven(n: number): boolean {

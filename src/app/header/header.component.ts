@@ -1,4 +1,8 @@
 import { Component, OnInit } from "@angular/core";
+import { faSignOut } from "@fortawesome/free-solid-svg-icons";
+import { KeycloakService } from "keycloak-angular";
+import { KeycloakProfile } from 'keycloak-js';
+import { environment } from "src/environments/environment";
 
 @Component({
   selector: 'app-header',
@@ -7,8 +11,26 @@ import { Component, OnInit } from "@angular/core";
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() {}
+  public isLoggedIn = false;
+  public userProfile: KeycloakProfile | null = null;
+  public keycloakProfileUrl = environment.keycloakUrl + '/realms/' + environment.keycloakRealm + "/account/#/personal-info";
+  public faSignOut = faSignOut;
 
-  ngOnInit(): void {
+  constructor(private readonly keycloak: KeycloakService) {}
+
+  public async ngOnInit() {
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+    }
+  }
+
+  public login() {
+    this.keycloak.login();
+  }
+
+  public logout() {
+    this.keycloak.logout();
   }
 }

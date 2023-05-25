@@ -14,5 +14,12 @@
         </li>
       </ul>
     </div>
+    <div class="d-flex justify-content-end me-3">
+      <a *ngIf="!isLoggedIn" class="nav-link" href="#" (click)="login()">Log in</a>
+      <ng-container *ngIf="isLoggedIn" class="text-center">
+        <a class="nav-link me-3" [href]="keycloakProfileUrl" target="_blank" title="User profile">{{userProfile?.firstName}} {{userProfile?.lastName}}</a>
+        <a class="nav-link cursor" href="#" (click)="logout()" title="Log out"><fa-icon [icon]="faSignOut"></fa-icon></a>
+      </ng-container>
+    </div>
   </nav>
 </header>
